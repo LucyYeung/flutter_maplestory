@@ -1,0 +1,29 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Henesys Hunting Ground I.tsx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Henesys Hunting Ground I.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "/Users/lucy/Documents/App/flutter_maplestory/assets/images/maple_story",
+    "openFiles": [
+        "Henesys Hunting Ground I.tsx"
+    ],
+    "project": "MapleStory.tiled-project",
+    "recentFiles": [
+        "Henesys Hunting Ground I.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
