@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flame: ^1.10.1
+  flame_tiled: ^1.15.1
 
 dev_dependencies:
   flutter_test:
