@@ -1,11 +1,12 @@
-import 'package:flame/camera.dart';
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flutter_maplestory/data/levels.dart';
 import 'package:flutter_maplestory/game/background.dart';
 import 'package:flutter_maplestory/game/level.dart';
 import 'package:flutter_maplestory/game/player.dart';
 
-class MapleStory extends FlameGame {
+class MapleStory extends FlameGame with HasKeyboardHandlerComponents {
   int currentLevelIndex = 0;
   Player player = Player(character: 'boy');
 
