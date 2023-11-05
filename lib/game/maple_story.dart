@@ -1,9 +1,10 @@
 import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
+import 'package:flutter_maplestory/data/levels.dart';
+import 'package:flutter_maplestory/game/background.dart';
 import 'package:flutter_maplestory/game/level.dart';
 
 class MapleStory extends FlameGame {
-  List<String> levelNames = ['Henesys Hunting Ground I'];
   int currentLevelIndex = 0;
 
   @override
@@ -16,15 +17,23 @@ class MapleStory extends FlameGame {
   }
 
   void _loadLevel() {
-    Level world = Level(levelName: levelNames[currentLevelIndex]);
+    final level = levels[currentLevelIndex];
+    Level world = Level(levelName: level.levelName);
+
+    final background = Background(
+      backgroundName: level.backgroundName,
+      height: level.height,
+    );
+
     final cam = CameraComponent.withFixedResolution(
       world: world,
-      width: 2242,
-      height: 1634,
+      width: level.height / size.y * size.x,
+      height: level.height,
     );
     cam.viewfinder
-      ..zoom = 3
+      ..zoom = level.height / size.y * 0.8
       ..position = Vector2(960, 1248);
-    addAll([cam, world]);
+
+    addAll([cam, world, background]);
   }
 }
