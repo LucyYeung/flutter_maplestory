@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_maplestory/game/collision_block.dart';
 import 'package:flutter_maplestory/game/custom_hit_box.dart';
 import 'package:flutter_maplestory/game/maple_story.dart';
+import 'package:flutter_maplestory/utils/check_collision.dart';
 
 enum PlayerState {
   alert,
@@ -19,7 +20,7 @@ enum PlayerState {
 }
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<MapleStory>, KeyboardHandler, CollisionCallbacks {
+    with HasGameRef<MapleStory>, KeyboardHandler {
   Player({required this.character, Vector2? position})
       : super(
           size: Vector2.all(96),
@@ -66,6 +67,8 @@ class Player extends SpriteAnimationGroupComponent
     _updatePlayerState(dt);
     _updatePlayerHorizontalMovement(dt);
 
+    _checkHorizontalCollisions();
+
     super.update(dt);
   }
 
@@ -98,6 +101,23 @@ class Player extends SpriteAnimationGroupComponent
     position.x += velocity.x * dt;
   }
 
+  void _checkHorizontalCollisions() {
+    for (final block in collisionBlocks) {
+      if (!block.isPlatform) {
+        if (checkCollision(this, block)) {
+          if (velocity.x > 0) {
+            velocity.x = 0;
+            position.x = block.x - hitbox.offsetX - hitbox.width;
+            break;
+          } else if (velocity.x < 0) {
+            velocity.x = 0;
+            position.x = block.x + block.width + hitbox.width + hitbox.offsetX;
+            break;
+          }
+        }
+      }
+    }
+  }
 
   SpriteAnimation _spriteAnimation(String state, int amount, Vector2 size) {
     return SpriteAnimation.fromFrameData(
