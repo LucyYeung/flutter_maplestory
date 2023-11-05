@@ -22,4 +22,5 @@ flutter:
 
   assets:
     - assets/tiles/
-    - assets/images/maple_story/
+    - assets/images/maps/
+    - assets/images/maps/backgrounds/
