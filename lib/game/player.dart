@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_maplestory/game/collision_block.dart';
+import 'package:flutter_maplestory/game/custom_hit_box.dart';
 import 'package:flutter_maplestory/game/maple_story.dart';
 
 enum PlayerState {
@@ -26,6 +27,7 @@ class Player extends SpriteAnimationGroupComponent
         );
 
   final String character;
+  late CustomHitBox hitbox = CustomHitBox(30, 0, 40, size.y);
 
   double horizontalMove = 0;
   double baseVelocity = 180;
@@ -36,6 +38,10 @@ class Player extends SpriteAnimationGroupComponent
   @override
   Future<void> onLoad() async {
     _loadAllAnimations();
+    add(RectangleHitbox(
+      position: Vector2(hitbox.offsetX, hitbox.offsetY),
+      size: Vector2(hitbox.width, hitbox.height),
+    ));
     super.onLoad();
   }
 
