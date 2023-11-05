@@ -1,6 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_maplestory/game/collision_block.dart';
 import 'package:flutter_maplestory/game/maple_story.dart';
 
 enum PlayerState {
@@ -29,6 +30,8 @@ class Player extends SpriteAnimationGroupComponent
   double horizontalMove = 0;
   double baseVelocity = 180;
   Vector2 velocity = Vector2.zero();
+
+  late List<CollisionBlock> collisionBlocks;
 
   @override
   Future<void> onLoad() async {

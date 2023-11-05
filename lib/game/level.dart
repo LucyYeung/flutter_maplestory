@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter_maplestory/game/collision_block.dart';
 import 'package:flutter_maplestory/game/player.dart';
 
 class Level extends World {
@@ -9,6 +10,7 @@ class Level extends World {
   Level({required this.levelName, required this.player});
 
   late TiledComponent level;
+  List<CollisionBlock> collisionBlocks = [];
 
   @override
   Future<void> onLoad() async {
@@ -16,6 +18,7 @@ class Level extends World {
     add(level);
 
     _spawningObjects();
+    _addCollisions();
 
     await super.onLoad();
   }
@@ -32,6 +35,36 @@ class Level extends World {
           break;
         }
       }
+    }
+  }
+
+  void _addCollisions() {
+    final collisionsPointLyayer =
+        level.tileMap.getLayer<ObjectGroup>('Collisions');
+
+    if (collisionsPointLyayer != null) {
+      for (final collision in collisionsPointLyayer.objects) {
+        switch (collision.class_) {
+          case 'Platform':
+            final platform = CollisionBlock(
+              position: Vector2(collision.x, collision.y),
+              size: Vector2(collision.width, collision.height),
+              isPlatform: true,
+            );
+            collisionBlocks.add(platform);
+            add(platform);
+          case 'Wall':
+            final wall = CollisionBlock(
+              position: Vector2(collision.x, collision.y),
+              size: Vector2(collision.width, collision.height),
+              isPlatform: false,
+            );
+            collisionBlocks.add(wall);
+          default:
+            break;
+        }
+      }
+      player.collisionBlocks = collisionBlocks;
     }
   }
 }

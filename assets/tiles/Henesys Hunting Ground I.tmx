@@ -111,10 +111,10 @@
   <object id="1" name="Player" type="Player" x="960" y="1248" width="96" height="96"/>
   <object id="5" x="544" y="1360" width="48"/>
  </objectgroup>
- <objectgroup id="3" name="Collection">
-  <object id="20" x="-5" y="0" width="32" height="1616"/>
+ <objectgroup id="3" name="Collisions">
+  <object id="20" name="Wall" type="Wall" x="-5" y="0" width="32" height="1616"/>
   <object id="21" x="32" y="1344" width="2176" height="16"/>
-  <object id="24" x="2208" y="0" width="32" height="1632"/>
+  <object id="24" name="Wall" type="Wall" x="2208" y="0" width="32" height="1632"/>
   <object id="25" type="Platfrom" x="32" y="1344" width="2160"/>
   <object id="29" x="1616" y="976" width="192" height="16"/>
   <object id="49" x="1728" y="1216" width="112" height="16"/>
