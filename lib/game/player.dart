@@ -15,7 +15,8 @@ class Player extends SpriteAnimationGroupComponent
   final String character;
 
   double horizontalMove = 0;
-  double velocity = 180;
+  double baseVelocity = 180;
+  Vector2 velocity = Vector2.zero();
 
   @override
   Future<void> onLoad() async {
@@ -42,6 +43,7 @@ class Player extends SpriteAnimationGroupComponent
   @override
   void update(double dt) {
     _updatePlayerState(dt);
+    _updatePlayerHorizontalMovement(dt);
 
     super.update(dt);
   }
@@ -67,10 +69,12 @@ class Player extends SpriteAnimationGroupComponent
     } else if (isLeft && scale.x < 0) {
       flipHorizontallyAroundCenter();
     }
-    if (horizontalMove != 0) {
-      current = PlayerState.walk;
-    }
-    position.x += horizontalMove * dt * velocity;
+    if (velocity.x != 0) current = PlayerState.walk;
+  }
+
+  void _updatePlayerHorizontalMovement(double dt) {
+    velocity.x = horizontalMove * baseVelocity;
+    position.x += velocity.x * dt;
   }
 
   SpriteAnimation _spriteAnimation(
