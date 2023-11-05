@@ -33,9 +33,9 @@ class MapleStory extends FlameGame with HasKeyboardHandlerComponents {
       width: level.height / size.y * size.x,
       height: level.height,
     );
-    cam.viewfinder
-      ..zoom = level.height / size.y * 0.8
-      ..position = Vector2(960, 1248);
+    cam.viewfinder.zoom = level.height / size.y * 0.8;
+
+    cam.follow(player);
 
     addAll([cam, world, background]);
   }
