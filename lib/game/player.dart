@@ -1,11 +1,23 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_maplestory/game/maple_story.dart';
 
-enum PlayerState { alert, hitAlert, jump, prone, proneStab, stand, swing, walk }
+enum PlayerState {
+  alert,
+  hitAlert,
+  jump,
+  prone,
+  proneStab,
+  stand,
+  swing1,
+  swing2,
+  swing3,
+  walk
+}
 
 class Player extends SpriteAnimationGroupComponent
-    with HasGameRef<MapleStory>, KeyboardHandler {
+    with HasGameRef<MapleStory>, KeyboardHandler, CollisionCallbacks {
   Player({required this.character, Vector2? position})
       : super(
           size: Vector2.all(96),
@@ -26,16 +38,16 @@ class Player extends SpriteAnimationGroupComponent
 
   void _loadAllAnimations() {
     animations = {
-      PlayerState.alert: _spriteAnimation('alert', 4, 2, Vector2(56, 71)),
-      PlayerState.hitAlert:
-          _spriteAnimation('hit_alert', 4, 2, Vector2(56, 71)),
-      PlayerState.jump: _spriteAnimation('jump', 2, 2, Vector2(49, 70)),
-      PlayerState.prone: _spriteAnimation('prone', 2, 2, Vector2(75, 44)),
-      PlayerState.proneStab:
-          _spriteAnimation('prone_stab', 3, 2, Vector2(89, 44)),
-      PlayerState.stand: _spriteAnimation('stand', 4, 2, Vector2(49, 79)),
-      PlayerState.swing: _spriteAnimation('swing', 12, 4, Vector2(87, 78)),
-      PlayerState.walk: _spriteAnimation('walk', 5, 3, Vector2(57, 75)),
+      PlayerState.alert: _spriteAnimation('alert', 4, Vector2(56, 71)),
+      PlayerState.hitAlert: _spriteAnimation('hit_alert', 4, Vector2(56, 71)),
+      PlayerState.jump: _spriteAnimation('jump', 1, Vector2(49, 70)),
+      PlayerState.prone: _spriteAnimation('prone', 1, Vector2(75, 44)),
+      PlayerState.proneStab: _spriteAnimation('prone_stab', 2, Vector2(89, 44)),
+      PlayerState.stand: _spriteAnimation('stand', 4, Vector2(49, 79)),
+      PlayerState.swing1: _spriteAnimation('swing1', 3, Vector2(99, 78)),
+      PlayerState.swing2: _spriteAnimation('swing2', 3, Vector2(121, 83)),
+      PlayerState.swing3: _spriteAnimation('swing3', 3, Vector2(116, 70)),
+      PlayerState.walk: _spriteAnimation('walk', 4, Vector2(58, 75)),
     };
     current = PlayerState.stand;
   }
@@ -64,9 +76,9 @@ class Player extends SpriteAnimationGroupComponent
     current = PlayerState.stand;
     final isRight = horizontalMove > 0;
     final isLeft = horizontalMove < 0;
-    if (isRight && scale.x > 0) {
+    if (isRight && scale.x < 0) {
       flipHorizontallyAroundCenter();
-    } else if (isLeft && scale.x < 0) {
+    } else if (isLeft && scale.x > 0) {
       flipHorizontallyAroundCenter();
     }
     if (velocity.x != 0) current = PlayerState.walk;
@@ -77,15 +89,14 @@ class Player extends SpriteAnimationGroupComponent
     position.x += velocity.x * dt;
   }
 
-  SpriteAnimation _spriteAnimation(
-      String state, int amount, int amountPerRow, Vector2 size) {
+
+  SpriteAnimation _spriteAnimation(String state, int amount, Vector2 size) {
     return SpriteAnimation.fromFrameData(
       // mixin from HasGameRef
       game.images.fromCache('players/$character/$state.png'),
       SpriteAnimationData.sequenced(
         amount: amount,
         stepTime: 0.5,
-        amountPerRow: amountPerRow,
         textureSize: size,
       ),
     );
