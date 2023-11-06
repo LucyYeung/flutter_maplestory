@@ -1,4 +1,6 @@
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_maplestory/data/levels.dart';
@@ -28,15 +30,15 @@ class MapleStory extends FlameGame with HasKeyboardHandlerComponents {
       height: level.height,
     );
 
-    final cam = CameraComponent.withFixedResolution(
-      world: world,
-      width: level.height / size.y * size.x,
-      height: level.height,
-    );
-    cam.viewfinder.zoom = level.height / size.y * 0.8;
+    // default viewport size is the size of the screen
+    camera = CameraComponent(world: world, viewfinder: Viewfinder());
 
-    cam.follow(player);
-
-    addAll([cam, world, background]);
+    // Set the camera bounds to the level size
+    camera.setBounds(Rectangle.fromCenter(
+      center: Vector2(level.width / 2, level.height / 2),
+      size: Vector2(level.width / 2 + player.width * 2, level.height),
+    ));
+    camera.follow(player, snap: true, maxSpeed: 200);
+    addAll([world, background]);
   }
 }
