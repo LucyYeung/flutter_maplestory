@@ -1,7 +1,7 @@
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_maplestory/game/maple_story.dart';
+import 'package:flutter_maplestory/maple_story.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

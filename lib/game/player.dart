@@ -3,7 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_maplestory/game/collision_block.dart';
 import 'package:flutter_maplestory/game/custom_hit_box.dart';
-import 'package:flutter_maplestory/game/maple_story.dart';
+import 'package:flutter_maplestory/maple_story.dart';
 import 'package:flutter_maplestory/utils/check_collision.dart';
 
 enum PlayerState {
