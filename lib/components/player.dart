@@ -17,7 +17,11 @@ enum PlayerState {
   swing1,
   swing2,
   swing3,
-  walk
+  walk,
+  ladder,
+  stopLadder,
+  rope,
+  stopRope,
 }
 
 class Player extends SpriteAnimationGroupComponent
@@ -40,6 +44,13 @@ class Player extends SpriteAnimationGroupComponent
   final double _terminalVelocity = 400;
   bool hasJumped = false;
   bool isOnPlatform = false;
+
+  bool upPressed = false;
+  ClimbType? climbType;
+  double verticalMove = 0;
+  double climbVelocity = 70;
+  double? climbingMinY;
+  double? climbingMaxY;
 
   late List<CollisionBlock> collisionBlocks;
 
@@ -65,6 +76,10 @@ class Player extends SpriteAnimationGroupComponent
       PlayerState.swing2: _spriteAnimation('swing2', 3, Vector2(121, 83)),
       PlayerState.swing3: _spriteAnimation('swing3', 3, Vector2(116, 70)),
       PlayerState.walk: _spriteAnimation('walk', 4, Vector2(58, 75)),
+      PlayerState.ladder: _spriteAnimation('ladder', 2, Vector2(52, 77)),
+      PlayerState.stopLadder: _spriteAnimation('ladder', 1, Vector2(52, 77)),
+      PlayerState.rope: _spriteAnimation('rope', 2, Vector2(49, 83)),
+      PlayerState.stopRope: _spriteAnimation('rope', 1, Vector2(49, 83)),
     };
     current = PlayerState.stand;
   }
@@ -90,6 +105,13 @@ class Player extends SpriteAnimationGroupComponent
       horizontalMove = 1;
     }
 
+    verticalMove = 0;
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      verticalMove = -1;
+    } else if (keysPressed.contains(LogicalKeyboardKey.arrowDown)) {
+      verticalMove = 1;
+    }
+
     hasJumped = keysPressed.contains(LogicalKeyboardKey.space);
 
     return super.onKeyEvent(event, keysPressed);
@@ -99,21 +121,32 @@ class Player extends SpriteAnimationGroupComponent
     current = PlayerState.stand;
     final isRight = horizontalMove > 0;
     final isLeft = horizontalMove < 0;
-    if (isRight && scale.x < 0) {
+    if (isRight && scale.x < 0 && climbType == null) {
       flipHorizontallyAroundCenter();
-    } else if (isLeft && scale.x > 0) {
+    } else if (isLeft && scale.x > 0 && climbType == null) {
       flipHorizontallyAroundCenter();
     }
     if (velocity.x != 0) current = PlayerState.walk;
     if (velocity.y != 0) current = PlayerState.jump;
+    if (climbType == ClimbType.ladder) {
+      current = verticalMove == 0 ? PlayerState.stopLadder : PlayerState.ladder;
+    }
+    if (climbType == ClimbType.rope) {
+      current = verticalMove == 0 ? PlayerState.stopRope : PlayerState.rope;
+    }
   }
 
   void _updatePlayerHorizontalMovement(double dt) {
+    if (climbType != null) return;
     velocity.x = horizontalMove * baseVelocity;
     position.x += velocity.x * dt;
   }
 
   void _updatePlayerVerticalMovement(double dt) {
+    if (velocity.y == 0 && climbType == null) {
+      isOnPlatform = true;
+    }
+
     if (hasJumped && isOnPlatform) {
       velocity.y = -_jumpVelocity;
       position.y += velocity.y * dt;
@@ -121,18 +154,43 @@ class Player extends SpriteAnimationGroupComponent
       hasJumped = false;
     }
 
-    if (velocity.y == 0) {
-      isOnPlatform = true;
+    if (climbType != null) {
+      _updateClimbing(dt);
+    } else {
+      velocity.y += _gravity;
+      velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
+      position.y += velocity.y * dt;
+    }
+  }
+
+  void _updateClimbing(double dt) {
+    final y = position.y + verticalMove * climbVelocity * dt;
+
+    final headY = y + hitbox.offsetY;
+    final footY = y + hitbox.offsetY + hitbox.height;
+
+    bool exit = false;
+
+    if (footY < climbingMinY!) {
+      position.y = climbingMinY! - hitbox.height - hitbox.offsetY;
+      exit = true;
+    } else if (headY > climbingMaxY!) {
+      exit = true;
+      position.y = y;
+    } else {
+      position.y = y;
     }
 
-    velocity.y += _gravity;
-    velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
-    position.y += velocity.y * dt;
+    if (exit) {
+      climbType = null;
+      climbingMinY = null;
+      climbingMaxY = null;
+    }
   }
 
   void _checkHorizontalCollisions() {
     for (final block in collisionBlocks) {
-      if (!block.isPlatform) {
+      if (!block.isPlatform && block.climbType == null) {
         if (checkCollision(this, block)) {
           if (velocity.x > 0) {
             velocity.x = 0;
@@ -156,6 +214,33 @@ class Player extends SpriteAnimationGroupComponent
             velocity.y = 0;
             position.y = block.y - hitbox.height - hitbox.offsetY;
             isOnPlatform = true;
+            break;
+          }
+        }
+      }
+      if (block.climbType != null) {
+        if (verticalMove < 0) {
+          if (checkCollision(this, block)) {
+            // if (velocity.y > 0) {
+            //   velocity.y = 0;
+            //   position.y = block.y - hitbox.height - hitbox.offsetY;
+            //   // isOnPlatform = true;
+            //   break;
+            // } else if (velocity.y < 0) {
+            //   velocity.y = 0;
+            //   position.y = block.y + block.height + hitbox.height + hitbox.offsetY;
+            //   break;
+            // }
+
+            isOnPlatform = false;
+            climbType = block.climbType;
+
+            climbingMinY = block.y;
+            climbingMaxY = block.y + block.height;
+
+            final climbingMidX = block.x + block.width / 2;
+
+            position.x = climbingMidX - width / 2 * (scale.x > 0 ? 1 : -1);
             break;
           }
         }

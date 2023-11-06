@@ -8,7 +8,8 @@ import 'package:flutter_maplestory/components/background.dart';
 import 'package:flutter_maplestory/components/level.dart';
 import 'package:flutter_maplestory/components/player.dart';
 
-class MapleStory extends FlameGame with HasKeyboardHandlerComponents {
+class MapleStory extends FlameGame
+    with HasKeyboardHandlerComponents, LongPressDetector {
   int currentLevelIndex = 0;
   Player player = Player(character: 'boy');
 
