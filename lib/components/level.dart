@@ -19,6 +19,7 @@ class Level extends World {
 
     _spawningObjects();
     _addCollisions();
+    _addClimbings();
 
     await super.onLoad();
   }
@@ -65,6 +66,22 @@ class Level extends World {
         }
       }
       player.collisionBlocks = collisionBlocks;
+    }
+  }
+
+  void _addClimbings() {
+    final climbingsLayer = level.tileMap.getLayer<ObjectGroup>('Climbings');
+    if (climbingsLayer == null) return;
+
+    for (final climbing in climbingsLayer.objects) {
+      final climbingBlock = CollisionBlock(
+        position: Vector2(climbing.x, climbing.y),
+        size: Vector2(climbing.width, climbing.height),
+        climbType: ClimbType.values
+            .firstWhere((v) => v.name == climbing.class_.toLowerCase()),
+      );
+      collisionBlocks.add(climbingBlock);
+      add(climbingBlock);
     }
   }
 }
