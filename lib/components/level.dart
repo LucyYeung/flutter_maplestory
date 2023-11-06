@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter_maplestory/game/collision_block.dart';
-import 'package:flutter_maplestory/game/player.dart';
+import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/player.dart';
 
 class Level extends World {
   final String levelName;

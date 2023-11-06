@@ -1,8 +1,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_maplestory/game/collision_block.dart';
-import 'package:flutter_maplestory/game/custom_hit_box.dart';
+import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/custom_hit_box.dart';
 import 'package:flutter_maplestory/maple_story.dart';
 import 'package:flutter_maplestory/utils/check_collision.dart';
 

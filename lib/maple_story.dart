@@ -4,9 +4,9 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_maplestory/data/levels.dart';
-import 'package:flutter_maplestory/game/background.dart';
-import 'package:flutter_maplestory/game/level.dart';
-import 'package:flutter_maplestory/game/player.dart';
+import 'package:flutter_maplestory/components/background.dart';
+import 'package:flutter_maplestory/components/level.dart';
+import 'package:flutter_maplestory/components/player.dart';
 
 class MapleStory extends FlameGame with HasKeyboardHandlerComponents {
   int currentLevelIndex = 0;

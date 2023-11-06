@@ -1,5 +1,5 @@
-import 'package:flutter_maplestory/game/collision_block.dart';
-import 'package:flutter_maplestory/game/player.dart';
+import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/player.dart';
 
 bool checkCollision(Player player, CollisionBlock block) {
   final hitbox = player.hitbox;
