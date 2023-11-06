@@ -1,10 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_maplestory/components/collision_block.dart';
-import 'package:flutter_maplestory/components/custom_hit_box.dart';
 import 'package:flutter_maplestory/maple_story.dart';
 import 'package:flutter_maplestory/utils/check_collision.dart';
+
+import 'collision_block.dart';
+import 'custom_hit_box.dart';
 
 enum PlayerState {
   alert,
@@ -28,11 +29,17 @@ class Player extends SpriteAnimationGroupComponent
         );
 
   final String character;
-  late CustomHitBox hitbox = CustomHitBox(30, 0, 40, size.y);
+  late CustomHitBox hitbox = CustomHitBox(30, 6, 40, 79);
 
   double horizontalMove = 0;
   double baseVelocity = 180;
   Vector2 velocity = Vector2.zero();
+
+  final double _gravity = 9.8;
+  final double _jumpVelocity = 230;
+  final double _terminalVelocity = 400;
+  bool hasJumped = false;
+  bool isOnPlatform = false;
 
   late List<CollisionBlock> collisionBlocks;
 
@@ -66,8 +73,10 @@ class Player extends SpriteAnimationGroupComponent
   void update(double dt) {
     _updatePlayerState(dt);
     _updatePlayerHorizontalMovement(dt);
+    _updatePlayerVerticalMovement(dt);
 
     _checkHorizontalCollisions();
+    _checkVerticalCollisions();
 
     super.update(dt);
   }
@@ -80,6 +89,8 @@ class Player extends SpriteAnimationGroupComponent
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
       horizontalMove = 1;
     }
+
+    hasJumped = keysPressed.contains(LogicalKeyboardKey.space);
 
     return super.onKeyEvent(event, keysPressed);
   }
@@ -94,11 +105,29 @@ class Player extends SpriteAnimationGroupComponent
       flipHorizontallyAroundCenter();
     }
     if (velocity.x != 0) current = PlayerState.walk;
+    if (velocity.y != 0) current = PlayerState.jump;
   }
 
   void _updatePlayerHorizontalMovement(double dt) {
     velocity.x = horizontalMove * baseVelocity;
     position.x += velocity.x * dt;
+  }
+
+  void _updatePlayerVerticalMovement(double dt) {
+    if (hasJumped && isOnPlatform) {
+      velocity.y = -_jumpVelocity;
+      position.y += velocity.y * dt;
+      isOnPlatform = false;
+      hasJumped = false;
+    }
+
+    if (velocity.y == 0) {
+      isOnPlatform = true;
+    }
+
+    velocity.y += _gravity;
+    velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
+    position.y += velocity.y * dt;
   }
 
   void _checkHorizontalCollisions() {
@@ -112,6 +141,21 @@ class Player extends SpriteAnimationGroupComponent
           } else if (velocity.x < 0) {
             velocity.x = 0;
             position.x = block.x + block.width + hitbox.width + hitbox.offsetX;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  void _checkVerticalCollisions() {
+    for (final block in collisionBlocks) {
+      if (block.isPlatform) {
+        if (checkCollision(this, block)) {
+          if (velocity.y > 0) {
+            velocity.y = 0;
+            position.y = block.y - hitbox.height - hitbox.offsetY;
+            isOnPlatform = true;
             break;
           }
         }
