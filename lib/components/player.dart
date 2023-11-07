@@ -147,25 +147,27 @@ class Player extends SpriteAnimationGroupComponent
       isOnPlatform = true;
     }
 
-    if (hasJumped && isOnPlatform) {
-      velocity.y = -_jumpVelocity;
-      position.y += velocity.y * dt;
-      isOnPlatform = false;
-      hasJumped = false;
-    }
+    if (hasJumped && isOnPlatform) _playerJump(dt);
 
-    if (climbType != null) {
-      _updateClimbing(dt);
-    }
+    if (climbType != null) _playerClimb(dt);
 
-    if (climbType == null) {
-      velocity.y += _gravity;
-      velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
-      position.y += velocity.y * dt;
-    }
+    if (climbType == null) _applyGravity(dt);
   }
 
-  void _updateClimbing(double dt) {
+  void _playerJump(double dt) {
+    velocity.y = -_jumpVelocity;
+    position.y += velocity.y * dt;
+    isOnPlatform = false;
+    hasJumped = false;
+  }
+
+  void _applyGravity(double dt) {
+    velocity.y += _gravity;
+    velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
+    position.y += velocity.y * dt;
+  }
+
+  void _playerClimb(double dt) {
     final y = position.y + verticalMove * climbVelocity * dt;
 
     final headY = y + hitbox.offsetY;
@@ -224,17 +226,6 @@ class Player extends SpriteAnimationGroupComponent
       if (block.climbType != null) {
         if (verticalMove < 0) {
           if (checkCollision(this, block)) {
-            // if (velocity.y > 0) {
-            //   velocity.y = 0;
-            //   position.y = block.y - hitbox.height - hitbox.offsetY;
-            //   // isOnPlatform = true;
-            //   break;
-            // } else if (velocity.y < 0) {
-            //   velocity.y = 0;
-            //   position.y = block.y + block.height + hitbox.height + hitbox.offsetY;
-            //   break;
-            // }
-
             isOnPlatform = false;
             climbType = block.climbType;
 
