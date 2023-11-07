@@ -40,8 +40,8 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
-  final double _jumpVelocity = 230;
-  final double _terminalVelocity = 400;
+  final double _jumpVelocity = 160;
+  final double _terminalVelocity = 300;
   bool hasJumped = false;
   bool isOnPlatform = false;
 
@@ -156,7 +156,9 @@ class Player extends SpriteAnimationGroupComponent
 
     if (climbType != null) {
       _updateClimbing(dt);
-    } else {
+    }
+
+    if (climbType == null) {
       velocity.y += _gravity;
       velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
       position.y += velocity.y * dt;
@@ -169,22 +171,23 @@ class Player extends SpriteAnimationGroupComponent
     final headY = y + hitbox.offsetY;
     final footY = y + hitbox.offsetY + hitbox.height;
 
-    bool exit = false;
+    bool isLeave = false;
 
     if (footY < climbingMinY!) {
       position.y = climbingMinY! - hitbox.height - hitbox.offsetY;
-      exit = true;
+      isLeave = true;
     } else if (headY > climbingMaxY!) {
-      exit = true;
-      position.y = y;
+      position.y = climbingMaxY! - hitbox.offsetY;
+      isLeave = true;
     } else {
       position.y = y;
     }
 
-    if (exit) {
+    if (isLeave) {
       climbType = null;
       climbingMinY = null;
       climbingMaxY = null;
+      velocity.y = 0;
     }
   }
 
