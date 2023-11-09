@@ -1,6 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/custom_hit_box.dart';
+import 'package:flutter_maplestory/components/monster.dart';
 import 'package:flutter_maplestory/components/player.dart';
 
 class Level extends World {
@@ -20,6 +22,7 @@ class Level extends World {
     _spawningObjects();
     _addCollisions();
     _addClimbings();
+    _addMonsters();
 
     await super.onLoad();
   }
@@ -82,6 +85,28 @@ class Level extends World {
       );
       collisionBlocks.add(climbingBlock);
       add(climbingBlock);
+    }
+  }
+
+  void _addMonsters() {
+    final monstersLayer = level.tileMap.getLayer<ObjectGroup>('Monsters');
+    if (monstersLayer == null) return;
+
+    for (final monsterPoint in monstersLayer.objects) {
+      switch (monsterPoint.class_) {
+        case 'Orange Mushroom':
+          final monster = Monster(
+            name: monsterPoint.class_,
+            hitbox: CustomHitBox(0, 0, 96, 90),
+            size: Vector2(96, 96),
+            position: Vector2(monsterPoint.x, monsterPoint.y),
+            canJump: true,
+          );
+          add(monster);
+          break;
+        default:
+          break;
+      }
     }
   }
 }
