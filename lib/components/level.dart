@@ -4,15 +4,15 @@ import 'package:flutter_maplestory/components/collision_block.dart';
 import 'package:flutter_maplestory/components/custom_hit_box.dart';
 import 'package:flutter_maplestory/components/monster.dart';
 import 'package:flutter_maplestory/components/player.dart';
+import 'package:flutter_maplestory/maple_story.dart';
 
-class Level extends World {
+class Level extends World with HasGameRef<MapleStory> {
   final String levelName;
   final Player player;
 
   Level({required this.levelName, required this.player});
 
   late TiledComponent level;
-  List<CollisionBlock> collisionBlocks = [];
 
   @override
   Future<void> onLoad() async {
@@ -55,7 +55,7 @@ class Level extends World {
               size: Vector2(collision.width, collision.height),
               isPlatform: true,
             );
-            collisionBlocks.add(platform);
+            game.collisionBlocks.add(platform);
             add(platform);
           case 'Wall':
             final wall = CollisionBlock(
@@ -63,12 +63,11 @@ class Level extends World {
               size: Vector2(collision.width, collision.height),
               isPlatform: false,
             );
-            collisionBlocks.add(wall);
+            game.collisionBlocks.add(wall);
           default:
             break;
         }
       }
-      player.collisionBlocks = collisionBlocks;
     }
   }
 
@@ -83,7 +82,7 @@ class Level extends World {
         climbType: ClimbType.values
             .firstWhere((v) => v.name == climbing.class_.toLowerCase()),
       );
-      collisionBlocks.add(climbingBlock);
+      game.collisionBlocks.add(climbingBlock);
       add(climbingBlock);
     }
   }

@@ -52,8 +52,6 @@ class Player extends SpriteAnimationGroupComponent
   double? climbingMinY;
   double? climbingMaxY;
 
-  late List<CollisionBlock> collisionBlocks;
-
   @override
   Future<void> onLoad() async {
     _loadAllAnimations();
@@ -194,7 +192,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _checkHorizontalCollisions() {
-    for (final block in collisionBlocks) {
+    for (final block in game.collisionBlocks) {
       if (!block.isPlatform && block.climbType == null) {
         if (checkCollision(this, block)) {
           if (velocity.x > 0) {
@@ -212,7 +210,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _checkVerticalCollisions() {
-    for (final block in collisionBlocks) {
+    for (final block in game.collisionBlocks) {
       if (block.isPlatform) {
         if (checkCollision(this, block)) {
           if (velocity.y > 0) {
