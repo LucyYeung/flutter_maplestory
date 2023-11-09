@@ -52,6 +52,11 @@ class Player extends SpriteAnimationGroupComponent
   double? climbingMinY;
   double? climbingMaxY;
 
+  bool attack = false;
+  double attackTime = 0.0;
+  int attckType = 0;
+  bool hitMonster = false;
+
   @override
   Future<void> onLoad() async {
     _loadAllAnimations();
@@ -112,6 +117,8 @@ class Player extends SpriteAnimationGroupComponent
 
     hasJumped = keysPressed.contains(LogicalKeyboardKey.space);
 
+    attack = keysPressed.contains(LogicalKeyboardKey.controlLeft);
+
     return super.onKeyEvent(event, keysPressed);
   }
 
@@ -126,6 +133,24 @@ class Player extends SpriteAnimationGroupComponent
     }
     if (velocity.x != 0) current = PlayerState.walk;
     if (velocity.y != 0) current = PlayerState.jump;
+
+    if (attack) {
+      attackTime += dt;
+      if (attackTime >= 1.5) {
+        attackTime = 0;
+        attckType = (attckType + 1) % 3;
+      }
+      hitMonster = attackTime > 1 && attackTime < 2;
+      if (attckType == 0) current = PlayerState.swing1;
+
+      if (attckType == 1) current = PlayerState.swing2;
+
+      if (attckType == 2) current = PlayerState.swing3;
+    } else {
+      attackTime = 0;
+      attckType = 0;
+    }
+
     if (climbType == ClimbType.ladder) {
       current = verticalMove == 0 ? PlayerState.stopLadder : PlayerState.ladder;
     }
