@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_maplestory/components/custom_hit_box.dart';
 import 'package:flutter_maplestory/maple_story.dart';
+import 'package:flutter_maplestory/utils/check_collision.dart';
 
 enum MonsterState {
   die,
@@ -12,7 +13,7 @@ enum MonsterState {
 }
 
 class Monster extends SpriteAnimationGroupComponent
-    with HasGameRef<MapleStory> {
+    with HasGameRef<MapleStory>, CollisionCallbacks {
   Monster({
     required this.name,
     required this.hitbox,
@@ -31,6 +32,13 @@ class Monster extends SpriteAnimationGroupComponent
   final double speedRatio;
   final bool canJump;
 
+  Vector2 velocity = Vector2.zero();
+
+  final double _gravity = 9.8;
+  final double _jumpVelocity = 160;
+  final double _terminalVelocity = 300;
+  bool isOnPlatform = false;
+
   @override
   Future<void> onLoad() async {
     debugMode = true;
@@ -40,6 +48,35 @@ class Monster extends SpriteAnimationGroupComponent
     ));
     _loadAllAnimations();
     await super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    _updateMonsterVericalMovement(dt);
+    _updateVerticalCollisions();
+    super.update(dt);
+  }
+
+  void _updateMonsterVericalMovement(double dt) {
+    _applyGravity(dt);
+  }
+
+  void _applyGravity(double dt) {
+    velocity.y += _gravity;
+    velocity.y = velocity.y.clamp(-_jumpVelocity, _terminalVelocity);
+    position.y += velocity.y * dt;
+  }
+
+  void _updateVerticalCollisions() {
+    for (final block in game.collisionBlocks) {
+      if (block.isPlatform) {
+        if (checkCollision(this, block)) {
+          isOnPlatform = true;
+          velocity.y = 0;
+          position.y = block.position.y - hitbox.offsetY - hitbox.height;
+        }
+      }
+    }
   }
 
   Future<void> _loadAllAnimations() async {
