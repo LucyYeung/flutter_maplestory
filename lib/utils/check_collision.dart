@@ -1,33 +1,40 @@
 import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/custom_hit_box.dart';
+import 'package:flutter_maplestory/components/monster.dart';
 import 'package:flutter_maplestory/components/player.dart';
 
-bool checkCollision(Player player, CollisionBlock block) {
-  final hitbox = player.hitbox;
+bool checkCollision(dynamic target, CollisionBlock block) {
+  late CustomHitBox hitbox;
+  if (target is Player) {
+    hitbox = target.hitbox;
+  } else if (target is Monster) {
+    hitbox = target.hitbox;
+  }
 
   final hitboxWidth = hitbox.width;
   final hitboxHeight = hitbox.height;
 
-  // calculate left corner of player hitbox
-  final playerX = (player.scale.x < 0)
-      ? player.x - hitbox.offsetX - hitboxWidth
-      : player.x + hitbox.offsetX;
+  // calculate left corner of target hitbox
+  final targetX = (target.scale.x < 0)
+      ? target.x - hitbox.offsetX - hitboxWidth
+      : target.x + hitbox.offsetX;
 
-  final playerY = player.y + hitbox.offsetY;
+  final targetY = target.y + hitbox.offsetY;
 
-  // calculate bottom corner of player hitbox
-  // if player is on platform, use the bottom of the hitbox
+  // calculate bottom corner of target hitbox
+  // if target is on platform, use the bottom of the hitbox
   // otherwise use the top of the hitbox
-  final fixedY = playerY + (block.isPlatform ? hitboxHeight : 0);
+  final fixedY = targetY + (block.isPlatform ? hitboxHeight : 0);
 
   final blockX = block.x;
   final blockY = block.y;
   final blockWidth = block.width;
   final blockHeight = block.height;
 
-  // check if player's left & right side is inside the block
-  // check if player's top & bottom side is over the block
-  return (playerX < blockX + blockWidth &&
-      playerX + hitboxWidth > blockX &&
+  // check if target's left & right side is inside the block
+  // check if target's top & bottom side is over the block
+  return (targetX < blockX + blockWidth &&
+      targetX + hitboxWidth > blockX &&
       fixedY < blockY + blockHeight &&
-      playerY + hitboxHeight > blockY);
+      targetY + hitboxHeight > blockY);
 }
