@@ -19,10 +19,10 @@ class Level extends World with HasGameRef<MapleStory> {
     level = await TiledComponent.load('$levelName.tmx', Vector2.all(16));
     add(level);
 
-    _spawningObjects();
     _addCollisions();
     _addClimbings();
     _addMonsters();
+    _spawningObjects();
 
     await super.onLoad();
   }
@@ -96,7 +96,7 @@ class Level extends World with HasGameRef<MapleStory> {
         case 'Orange Mushroom':
           final monster = Monster(
             name: monsterPoint.class_,
-            hitbox: CustomHitBox(0, 0, 96, 90),
+            hitbox: CustomHitBox(0, 4, 96, 80),
             size: Vector2(96, 96),
             position: Vector2(monsterPoint.x, monsterPoint.y),
             canJump: true,
