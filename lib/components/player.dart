@@ -209,7 +209,7 @@ class Player extends SpriteAnimationGroupComponent
       position.y = y;
     }
 
-    if (isLeave) {
+    if (isLeave || hasJumped) {
       climbType = null;
       climbingMinY = null;
       climbingMaxY = null;
