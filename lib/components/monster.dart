@@ -36,6 +36,8 @@ class Monster extends SpriteAnimationGroupComponent
   bool hasAttacked = false;
   bool isDead = false;
 
+  double horizontalMove = 0;
+  double baseVelocity = 180;
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
@@ -58,6 +60,7 @@ class Monster extends SpriteAnimationGroupComponent
   void update(double dt) {
     _updateMonsterVericalMovement(dt);
     _updateVerticalCollisions();
+    _detectPlayer(dt);
     super.update(dt);
   }
 
@@ -134,5 +137,41 @@ class Monster extends SpriteAnimationGroupComponent
         textureSize: size,
       ),
     );
+  }
+
+  void _detectPlayer(dt) {
+    if (hasAttacked) return;
+
+    final player = game.player;
+
+    if (scale.x > 0) {
+      if (player.scale.x > 0) {
+        if (position.x + hitbox.offsetX <
+            player.position.x - player.hitbox.offsetX - player.hitbox.width) {
+          horizontalMove = 1;
+          scale.x = -1;
+        }
+      } else {
+        if (position.x - hitbox.offsetX < player.position.x) {
+          horizontalMove = 1;
+          scale.x = -1;
+        }
+      }
+    } else {
+      if (player.scale.x > 0) {
+        if (player.position.x - player.hitbox.offsetX <
+            position.x - hitbox.offsetX - hitbox.width) {
+          horizontalMove = -1;
+          scale.x = 1;
+        }
+      } else {
+        if (player.position.x + player.hitbox.offsetX + player.hitbox.width <
+            position.x - hitbox.offsetX - hitbox.width) {
+          horizontalMove = -1;
+          scale.x = 1;
+        }
+      }
+    }
+    position.x += horizontalMove * baseVelocity * speedRatio * dt;
   }
 }
