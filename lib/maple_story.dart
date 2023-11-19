@@ -10,7 +10,10 @@ import 'package:flutter_maplestory/components/level.dart';
 import 'package:flutter_maplestory/components/player.dart';
 
 class MapleStory extends FlameGame
-    with HasKeyboardHandlerComponents, LongPressDetector {
+    with
+        HasKeyboardHandlerComponents,
+        LongPressDetector,
+        HasCollisionDetection {
   int currentLevelIndex = 0;
   Player player = Player(character: 'boy');
   List<CollisionBlock> collisionBlocks = [];

@@ -26,13 +26,14 @@ enum PlayerState {
 
 class Player extends SpriteAnimationGroupComponent
     with HasGameRef<MapleStory>, KeyboardHandler {
-  Player({required this.character, Vector2? position})
+  Player({required this.character, Vector2? position, this.damage = 20})
       : super(
           size: Vector2.all(96),
           position: position,
         );
 
   final String character;
+  final int damage;
   late CustomHitBox hitbox = CustomHitBox(30, 6, 40, 79);
 
   double horizontalMove = 0;

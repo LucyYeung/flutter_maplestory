@@ -1,6 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter_maplestory/components/custom_hit_box.dart';
+import 'package:flutter_maplestory/components/player.dart';
 import 'package:flutter_maplestory/maple_story.dart';
 import 'package:flutter_maplestory/utils/check_collision.dart';
 
@@ -28,9 +29,12 @@ class Monster extends SpriteAnimationGroupComponent
   final String name;
   final CustomHitBox hitbox;
   final int damage;
-  final int hp;
+  int hp;
   final double speedRatio;
   final bool canJump;
+
+  bool hasAttacked = false;
+  bool isDead = false;
 
   Vector2 velocity = Vector2.zero();
 
@@ -55,6 +59,34 @@ class Monster extends SpriteAnimationGroupComponent
     _updateMonsterVericalMovement(dt);
     _updateVerticalCollisions();
     super.update(dt);
+  }
+
+  @override
+  Future<void> onCollision(
+      Set<Vector2> intersectionPoints, PositionComponent other) async {
+    if (other is Player && !isDead) {
+      if (other.attack &&
+          other.animationTicker?.currentIndex == 1 &&
+          !hasAttacked) {
+        hp -= other.damage;
+        hasAttacked = true;
+        if (hp <= 0) {
+          isDead = true;
+          current = MonsterState.die;
+          await animationTicker?.completed;
+          velocity = Vector2.zero();
+          removeFromParent();
+          return;
+        } else {
+          current = MonsterState.hit;
+        }
+      } else if (!other.attack || other.animationTicker?.currentIndex == 0) {
+        hasAttacked = false;
+        current = MonsterState.move;
+      }
+      return;
+    }
+    super.onCollision(intersectionPoints, other);
   }
 
   void _updateMonsterVericalMovement(double dt) {
@@ -83,7 +115,8 @@ class Monster extends SpriteAnimationGroupComponent
     animations = {
       MonsterState.die: _spriteAnimation('die', 3, Vector2(65, 74))
         ..loop = false,
-      MonsterState.hit: _spriteAnimation('hit', 1, Vector2(62, 65)),
+      MonsterState.hit: _spriteAnimation('hit', 1, Vector2(62, 65))
+        ..loop = false,
       MonsterState.jump: _spriteAnimation('jump', 1, Vector2(62, 64)),
       MonsterState.move: _spriteAnimation('move', 3, Vector2(65, 76)),
       MonsterState.stand: _spriteAnimation('stand', 2, Vector2(63, 61)),
