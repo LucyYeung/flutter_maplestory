@@ -3,23 +3,85 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Henesys Hunting Ground I.tsx",
+    "activeFile": "Henesys Hunting Ground I.tmx",
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
+        "Henesys Hunting Ground I.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.4575,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1416.3934426229507,
+                "y": 1302.7322404371585
+            }
+        },
         "Henesys Hunting Ground I.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "a.tmx": {
+            "scale": 0.54328125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 640.5522001725625,
+                "y": 360.77077940753514
+            }
+        },
+        "a.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "b.tmx": {
+            "scale": 6.2084,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 47.8384124734231,
+                "y": 679.24102828426
+            }
+        },
+        "background.tmx": {
+            "scale": 2.4077,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.5415957137517,
+                "y": 238.40179424346886
+            }
+        },
+        "background.tsx": {
+            "scaleInDock": 1
+        },
+        "c.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "ccc.tmx": {
+            "scale": 0.9154,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1799.2134585973345,
+                "y": 1258.4662442648023
+            }
         }
     },
     "last.imagePath": "/Users/lucy/Documents/App/flutter_maplestory/assets/images/maps",
     "openFiles": [
-        "Henesys Hunting Ground I.tsx"
+        "Henesys Hunting Ground I.tmx"
     ],
     "project": "MapleStory.tiled-project",
     "recentFiles": [
-        "Henesys Hunting Ground I.tsx"
+        "Henesys Hunting Ground I.tmx",
+        "Henesys Hunting Ground I.tsx",
+        "ccc.tmx",
+        "a.tmx",
+        "b.tmx",
+        "background.tmx",
+        "c.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
