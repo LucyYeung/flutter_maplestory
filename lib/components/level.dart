@@ -96,8 +96,8 @@ class Level extends World with HasGameRef<MapleStory> {
         case 'Orange Mushroom':
           final monster = Monster(
             name: monsterPoint.class_,
-            hitbox: CustomHitBox(0, 4, 96, 80),
-            size: Vector2(96, 96),
+            hitbox: CustomHitBox(0, 0, 65, 70),
+            size: Vector2(65, 76),
             position: Vector2(monsterPoint.x, monsterPoint.y),
             canJump: true,
           );
