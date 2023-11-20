@@ -98,8 +98,20 @@ class Level extends World with HasGameRef<MapleStory> {
             name: monsterPoint.class_,
             hitbox: CustomHitBox(0, 0, 65, 70),
             size: Vector2(65, 76),
+            speedRatio: 1.0,
             position: Vector2(monsterPoint.x, monsterPoint.y),
             canJump: true,
+          );
+          add(monster);
+          break;
+        case 'Blue Snail':
+          final monster = Monster(
+            name: monsterPoint.class_,
+            hitbox: CustomHitBox(0, 0, 44, 34),
+            size: Vector2(44, 34),
+            speedRatio: 0.3,
+            position: Vector2(monsterPoint.x, monsterPoint.y),
+            canJump: false,
           );
           add(monster);
           break;
