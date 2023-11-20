@@ -9,6 +9,7 @@ import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_maplestory/components/collision_block.dart';
+import 'package:flutter_maplestory/components/jump_button.dart';
 import 'package:flutter_maplestory/data/levels.dart';
 import 'package:flutter_maplestory/components/background.dart';
 import 'package:flutter_maplestory/components/level.dart';
@@ -34,6 +35,7 @@ class MapleStory extends FlameGame
 
     if (Platform.isAndroid || Platform.isIOS) {
       _loadJoystick();
+      _loadJumpButton();
     }
 
     await super.onLoad();
@@ -117,5 +119,17 @@ class MapleStory extends FlameGame
       default:
         break;
     }
+  }
+
+  void _loadJumpButton() {
+    JumpButton jumpButton = JumpButton(
+      position: Vector2(
+        size.x - 100,
+        size.y - 100,
+      ),
+      size: Vector2(50, 50),
+    );
+    add(jumpButton);
+    camera.viewport.add(jumpButton);
   }
 }
