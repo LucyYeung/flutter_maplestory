@@ -34,14 +34,18 @@ class Player extends SpriteAnimationGroupComponent
 
   final String character;
   final int damage;
-  late CustomHitBox hitbox = CustomHitBox(30, 6, 40, 79);
+  late CustomHitBox hitbox = CustomHitBox(6, 0, 40, 79);
+  late RectangleHitbox attackHitbox = RectangleHitbox(
+    position: Vector2(hitbox.offsetX, hitbox.offsetY),
+    size: Vector2(hitbox.width, hitbox.height),
+  );
 
   double horizontalMove = 0;
   double baseVelocity = 180;
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
-  final double _jumpVelocity = 160;
+  final double _jumpVelocity = 240;
   final double _terminalVelocity = 300;
   bool hasJumped = false;
   bool isOnPlatform = false;
@@ -60,11 +64,9 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   Future<void> onLoad() async {
+    debugMode = true;
     _loadAllAnimations();
-    add(RectangleHitbox(
-      position: Vector2(hitbox.offsetX, hitbox.offsetY),
-      size: Vector2(hitbox.width, hitbox.height),
-    ));
+    add(attackHitbox);
     super.onLoad();
   }
 
@@ -125,6 +127,9 @@ class Player extends SpriteAnimationGroupComponent
 
   void _updatePlayerState(double dt) {
     current = PlayerState.stand;
+    size = Vector2(49, 79);
+    hitbox = CustomHitBox((size.x - 40) / 2, 2, 40, 65);
+
     final isRight = horizontalMove > 0;
     final isLeft = horizontalMove < 0;
     if (isRight && scale.x < 0 && climbType == null) {
@@ -132,8 +137,14 @@ class Player extends SpriteAnimationGroupComponent
     } else if (isLeft && scale.x > 0 && climbType == null) {
       flipHorizontallyAroundCenter();
     }
-    if (velocity.x != 0) current = PlayerState.walk;
-    if (velocity.y != 0) current = PlayerState.jump;
+    if (velocity.x != 0) {
+      current = PlayerState.walk;
+      size = Vector2(58, 75);
+    }
+    if (velocity.y != 0) {
+      current = PlayerState.jump;
+      size = Vector2(49, 70);
+    }
 
     if (attack) {
       attackTime += dt;
@@ -142,11 +153,21 @@ class Player extends SpriteAnimationGroupComponent
         attckType = (attckType + 1) % 3;
       }
       hitMonster = attackTime > 1 && attackTime < 2;
-      if (attckType == 0) current = PlayerState.swing1;
+      if (attckType == 0) {
+        current = PlayerState.swing1;
+        size = Vector2(99, 78);
+      }
 
-      if (attckType == 1) current = PlayerState.swing2;
+      if (attckType == 1) {
+        current = PlayerState.swing2;
+        size = Vector2(121, 83);
+      }
 
-      if (attckType == 2) current = PlayerState.swing3;
+      if (attckType == 2) {
+        current = PlayerState.swing3;
+        size = Vector2(116, 70);
+      }
+      hitbox = CustomHitBox((size.x - 90) / 2, 2, 90, 65);
     } else {
       attackTime = 0;
       attckType = 0;
@@ -154,10 +175,15 @@ class Player extends SpriteAnimationGroupComponent
 
     if (climbType == ClimbType.ladder) {
       current = verticalMove == 0 ? PlayerState.stopLadder : PlayerState.ladder;
+      size = Vector2(52, 77);
     }
     if (climbType == ClimbType.rope) {
       current = verticalMove == 0 ? PlayerState.stopRope : PlayerState.rope;
+      size = Vector2(49, 83);
     }
+
+    attackHitbox.position = Vector2(hitbox.offsetX, hitbox.offsetY);
+    attackHitbox.size = Vector2(hitbox.width, hitbox.height);
   }
 
   void _updatePlayerHorizontalMovement(double dt) {
