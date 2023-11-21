@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="140" height="102" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="92">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="140" height="102" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="99">
  <tileset firstgid="1" source="Henesys Hunting Ground I.tsx"/>
  <layer id="1" name="Background" width="140" height="102">
   <data encoding="csv">
@@ -118,7 +118,28 @@
   <object id="90" name="Orange Mushroom" type="Orange Mushroom" x="944" y="1040">
    <point/>
   </object>
-  <object id="91" name="Blue Snail" type="Blue Snail" x="848" y="1344">
+  <object id="91" name="Blue Snail" type="Blue Snail" x="720" y="1344">
+   <point/>
+  </object>
+  <object id="92" name="Blue Snail" type="Blue Snail" x="720" y="1040">
+   <point/>
+  </object>
+  <object id="93" name="Blue Snail" type="Blue Snail" x="1360" y="1040">
+   <point/>
+  </object>
+  <object id="94" name="Orange Mushroom" type="Orange Mushroom" x="896" y="560">
+   <point/>
+  </object>
+  <object id="95" name="Orange Mushroom" type="Orange Mushroom" x="1344" y="800">
+   <point/>
+  </object>
+  <object id="96" name="Orange Mushroom" type="Orange Mushroom" x="992" y="800">
+   <point/>
+  </object>
+  <object id="97" name="Blue Snail" type="Blue Snail" x="1520" y="800">
+   <point/>
+  </object>
+  <object id="98" name="Blue Snail" type="Blue Snail" x="1312" y="560">
    <point/>
   </object>
  </objectgroup>
