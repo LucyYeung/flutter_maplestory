@@ -7,6 +7,7 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_maplestory/components/attack_button.dart';
 import 'package:flutter_maplestory/components/collision_block.dart';
@@ -28,13 +29,15 @@ class MapleStory extends FlameGame
 
   late JoystickComponent joystick;
 
+  bool isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+
   @override
   Future<void> onLoad() async {
     await images.loadAllImages();
 
     _loadLevel();
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (isMobile) {
       _loadJoystick();
       _loadJumpButton();
       _loadAttackButton();
@@ -45,7 +48,7 @@ class MapleStory extends FlameGame
 
   @override
   void update(double dt) {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (isMobile) {
       _updateJoystick(dt);
     }
     super.update(dt);
@@ -80,7 +83,7 @@ class MapleStory extends FlameGame
     joystick = JoystickComponent(
       knob: CircleComponent(radius: 24, paint: knobPaint),
       background: CircleComponent(radius: 48, paint: backgroundPaint),
-      margin: const EdgeInsets.only(left: 32, bottom: 32),
+      margin: const EdgeInsets.only(left: 64, bottom: 32),
     );
     add(joystick);
     camera.viewport.add(joystick);
