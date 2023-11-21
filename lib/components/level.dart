@@ -33,7 +33,7 @@ class Level extends World with HasGameRef<MapleStory> {
     if (spawnPointLyayer != null) {
       for (final spawnPoint in spawnPointLyayer.objects) {
         if (spawnPoint.class_ == 'Player') {
-          player.position = Vector2(spawnPoint.x, spawnPoint.y);
+          player.position = Vector2(spawnPoint.x, spawnPoint.y - 20);
           player.scale.x = 1;
           add(player);
           break;
