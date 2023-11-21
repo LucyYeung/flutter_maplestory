@@ -8,6 +8,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_maplestory/components/attack_button.dart';
 import 'package:flutter_maplestory/components/collision_block.dart';
 import 'package:flutter_maplestory/components/jump_button.dart';
 import 'package:flutter_maplestory/data/levels.dart';
@@ -36,6 +37,7 @@ class MapleStory extends FlameGame
     if (Platform.isAndroid || Platform.isIOS) {
       _loadJoystick();
       _loadJumpButton();
+      _loadAttackButton();
     }
 
     await super.onLoad();
@@ -66,7 +68,7 @@ class MapleStory extends FlameGame
       center: Vector2(level.width / 2, level.height / 2),
       size: Vector2(level.width / 2 + player.width * 2, level.height),
     ));
-    camera.follow(player, snap: true, maxSpeed: 200);
+    camera.follow(player, snap: false);
     addAll([world, background]);
   }
 
@@ -124,12 +126,24 @@ class MapleStory extends FlameGame
   void _loadJumpButton() {
     JumpButton jumpButton = JumpButton(
       position: Vector2(
-        size.x - 100,
+        size.x - 180,
         size.y - 100,
       ),
       size: Vector2(50, 50),
     );
     add(jumpButton);
     camera.viewport.add(jumpButton);
+  }
+
+  void _loadAttackButton() {
+    final attackButton = AttackButton(
+      position: Vector2(
+        size.x - 100,
+        size.y - 100,
+      ),
+      size: Vector2(50, 50),
+    );
+    add(attackButton);
+    camera.viewport.add(attackButton);
   }
 }
