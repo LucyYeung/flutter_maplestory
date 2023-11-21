@@ -42,7 +42,6 @@ class Monster extends SpriteAnimationGroupComponent
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
     add(RectangleHitbox(
       position: Vector2(hitbox.offsetX, hitbox.offsetY),
       size: Vector2(hitbox.width, hitbox.height),
