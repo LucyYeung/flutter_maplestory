@@ -65,8 +65,10 @@ class MapleStory extends FlameGame
 
     // Set the camera bounds to the level size
     camera.setBounds(Rectangle.fromCenter(
-      center: Vector2(level.width / 2, level.height / 2),
-      size: Vector2(level.width / 2 + player.width * 2, level.height),
+      center: Vector2(level.width / 2, (kIsWeb ? size.y : level.height) / 2),
+      size: kIsWeb
+          ? Vector2(size.x - player.width * 2 - 32, level.height)
+          : Vector2(level.width / 2 + player.width * 2 - 32, level.height),
     ));
     camera.follow(player, snap: false);
     addAll([world, background]);
