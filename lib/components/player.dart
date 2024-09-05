@@ -146,7 +146,7 @@ class Player extends SpriteAnimationGroupComponent
     } else if (isLeft && scale.x > 0 && climbType == null) {
       flipHorizontallyAroundCenter();
     }
-    if (velocity.x == 0 && !attack) {
+    if (velocity.x == 0 && !attack && climbType == null) {
       current = PlayerState.stand;
       size = Vector2(49, 79);
     }
@@ -154,7 +154,7 @@ class Player extends SpriteAnimationGroupComponent
       current = PlayerState.walk;
       size = Vector2(58, 75);
     }
-    if (velocity.y != 0) {
+    if (velocity.y != 0 && climbType == null) {
       current = PlayerState.jump;
       size = Vector2(49, 70);
     }
