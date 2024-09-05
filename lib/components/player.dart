@@ -41,7 +41,7 @@ class Player extends SpriteAnimationGroupComponent
   );
 
   double horizontalMove = 0;
-  double baseVelocity = 300;
+  double baseVelocity = 180;
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
