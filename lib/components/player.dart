@@ -41,7 +41,7 @@ class Player extends SpriteAnimationGroupComponent
   );
 
   double horizontalMove = 0;
-  double baseVelocity = 180;
+  double baseVelocity = 300;
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
@@ -114,7 +114,7 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     horizontalMove = 0;
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
       horizontalMove = -1;
@@ -137,8 +137,6 @@ class Player extends SpriteAnimationGroupComponent
   }
 
   void _updatePlayerState(double dt) {
-    current = PlayerState.stand;
-    size = Vector2(49, 79);
     hitbox = CustomHitBox((size.x - 40) / 2, 2, 40, 65);
 
     final isRight = horizontalMove > 0;
@@ -147,6 +145,10 @@ class Player extends SpriteAnimationGroupComponent
       flipHorizontallyAroundCenter();
     } else if (isLeft && scale.x > 0 && climbType == null) {
       flipHorizontallyAroundCenter();
+    }
+    if (velocity.x == 0 && !attack) {
+      current = PlayerState.stand;
+      size = Vector2(49, 79);
     }
     if (velocity.x != 0) {
       current = PlayerState.walk;
@@ -159,11 +161,10 @@ class Player extends SpriteAnimationGroupComponent
 
     if (attack) {
       attackTime += dt;
-      if (attackTime >= 1.5) {
+      if (attackTime >= 1) {
         attackTime = 0;
         attckType = (attckType + 1) % 3;
       }
-      hitMonster = attackTime > 1 && attackTime < 2;
       if (attckType == 0) {
         current = PlayerState.swing1;
         size = Vector2(99, 78);
@@ -308,10 +309,7 @@ class Player extends SpriteAnimationGroupComponent
       // mixin from HasGameRef
       game.images.fromCache('players/$character/$state.png'),
       SpriteAnimationData.sequenced(
-        amount: amount,
-        stepTime: 0.5,
-        textureSize: size,
-      ),
+          amount: amount, stepTime: 0.5, textureSize: size, loop: true),
     );
   }
 }
