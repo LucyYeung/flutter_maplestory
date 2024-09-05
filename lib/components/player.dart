@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_maplestory/maple_story.dart';
 import 'package:flutter_maplestory/utils/check_collision.dart';
@@ -46,10 +45,12 @@ class Player extends SpriteAnimationGroupComponent
   Vector2 velocity = Vector2.zero();
 
   final double _gravity = 9.8;
-  final double _jumpVelocity = kIsWeb ? 360 : 240;
-  final double _terminalVelocity = 400;
+  final double _jumpVelocity = 280;
+  final double _terminalVelocity = 280;
   bool hasJumped = false;
   bool isOnPlatform = false;
+  double timeElapsed = 0;
+  static const timePerFrame = 1 / 60;
 
   bool upPressed = false;
   ClimbType? climbType;
@@ -100,6 +101,16 @@ class Player extends SpriteAnimationGroupComponent
     _checkVerticalCollisions();
 
     super.update(dt);
+  }
+
+  @override
+  void updateTree(double dt) {
+    timeElapsed += dt;
+
+    if (timeElapsed > timePerFrame) {
+      timeElapsed -= timePerFrame;
+      super.updateTree(timePerFrame);
+    }
   }
 
   @override
